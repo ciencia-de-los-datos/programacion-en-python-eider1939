@@ -79,18 +79,14 @@ def pregunta_03():
             valor_1=row[0].split('\t')
             lista_columna12.append((valor_1[0],valor_1[1]))
     def reducer(sequence):
-        
         counter = {}
         for key, value in sequence:
             if key in counter:
                 counter[key] += int(value)
             else:
                 counter[key] = int(value)
-
         return sorted([(key, counter[key]) for key in counter])
-
     return reducer(sequence=lista_columna12)
-
 
 def pregunta_04():
     """
