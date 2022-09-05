@@ -12,7 +12,7 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
-
+import csv
 def pregunta_01():
     """
     Retorne la suma de la segunda columna.
@@ -21,9 +21,14 @@ def pregunta_01():
     214
 
     """
-    return
-
-
+    valor_columna2=0
+    with open('data.csv') as File:
+        reader = csv.reader(File, delimiter=',', quotechar='\t',
+                            quoting=csv.QUOTE_MINIMAL)
+        for row in reader:
+            lista_pcolunas=row[0].split('\t')
+            valor_columna2+=int(lista_pcolunas[1])
+    return valor_columna2
 def pregunta_02():
     """
     Retorne la cantidad de registros por cada letra de la primera columna como la lista
@@ -39,7 +44,16 @@ def pregunta_02():
     ]
 
     """
-    return
+    lista_columna1=[]
+    with open('data.csv') as File:
+        reader = csv.reader(File, delimiter=',', quotechar='\t',
+                            quoting=csv.QUOTE_MINIMAL)
+        for row in reader:
+            valor_1=row[0].split('\t')
+            lista_columna1.append(valor_1[0])
+    map_1=list(map(lambda x: (x,lista_columna1.count(x)),lista_columna1))
+    map_1_unicos=list(set(map_1))
+    return sorted(map_1_unicos)
 
 
 def pregunta_03():
@@ -57,7 +71,25 @@ def pregunta_03():
     ]
 
     """
-    return
+    lista_columna12=[]
+    with open('data.csv') as File:
+        reader = csv.reader(File, delimiter=',', quotechar='\t',
+                            quoting=csv.QUOTE_MINIMAL)
+        for row in reader:
+            valor_1=row[0].split('\t')
+            lista_columna12.append((valor_1[0],valor_1[1]))
+    def reducer(sequence):
+        
+        counter = {}
+        for key, value in sequence:
+            if key in counter:
+                counter[key] += int(value)
+            else:
+                counter[key] = int(value)
+
+        return sorted([(key, counter[key]) for key in counter])
+
+    return reducer(sequence=lista_columna12)
 
 
 def pregunta_04():
