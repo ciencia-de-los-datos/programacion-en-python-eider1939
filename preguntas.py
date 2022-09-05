@@ -51,8 +51,10 @@ def pregunta_02():
         for row in reader:
             valor_1=row[0].split('\t')
             lista_columna1.append(valor_1[0])
+            
     map_1=list(map(lambda x: (x,lista_columna1.count(x)),lista_columna1))
     map_1_unicos=list(set(map_1))
+
     return sorted(map_1_unicos)
 
 
