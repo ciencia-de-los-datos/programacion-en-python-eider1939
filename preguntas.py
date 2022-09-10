@@ -11,8 +11,27 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+##funcion lee el archivo data.csv y lo gruada en un lista por lines separadas por '\t'
+def read_texto():
+    lineas_texto=[]
+    with open("data.csv", "r") as file:
+        data = file.readlines()
+    for line in data:
+        line = line.replace('\n','')
+        row = line.split(sep='\t')
+        lineas_texto.append(row)
+    return lineas_texto
+##funcion cuenta las ocurrencias 
+def reducer(sequence):
+    counter = {}
+    for key, value in sequence:
+        if key in counter:
+            counter[key] += int(value)
+        else:
+            counter[key] = int(value)
+    return sorted([(key, counter[key]) for key in counter])
 
-import csv
+
 def pregunta_01():
     """
     Retorne la suma de la segunda columna.
@@ -21,14 +40,10 @@ def pregunta_01():
     214
 
     """
-    valor_columna2=0
-    with open('data.csv') as File:
-        reader = csv.reader(File, delimiter=',', quotechar='\t',
-                            quoting=csv.QUOTE_MINIMAL)
-        for row in reader:
-            lista_pcolunas=row[0].split('\t')
-            valor_columna2+=int(lista_pcolunas[1])
-    return valor_columna2
+    data=read_texto()
+    valores_columna2=[int(data[i][1]) for i in range(0,len(data))]
+    return sum(valores_columna2)
+
 def pregunta_02():
     """
     Retorne la cantidad de registros por cada letra de la primera columna como la lista
@@ -44,18 +59,10 @@ def pregunta_02():
     ]
 
     """
-    lista_columna1=[]
-    with open('data.csv') as File:
-        reader = csv.reader(File, delimiter=',', quotechar='\t',
-                            quoting=csv.QUOTE_MINIMAL)
-        for row in reader:
-            valor_1=row[0].split('\t')
-            lista_columna1.append(valor_1[0])
-            
-    map_1=list(map(lambda x: (x,lista_columna1.count(x)),lista_columna1))
-    map_1_unicos=list(set(map_1))
-
-    return sorted(map_1_unicos)
+    data=read_texto()
+    lista_columna1=[(data[i][0],1) for i in range(0,len(data))]
+    map_1_unicos=reducer(sequence=lista_columna1)
+    return map_1_unicos
 
 
 def pregunta_03():
@@ -73,22 +80,10 @@ def pregunta_03():
     ]
 
     """
-    lista_columna12=[]
-    with open('data.csv') as File:
-        reader = csv.reader(File, delimiter=',', quotechar='\t',
-                            quoting=csv.QUOTE_MINIMAL)
-        for row in reader:
-            valor_1=row[0].split('\t')
-            lista_columna12.append((valor_1[0],valor_1[1]))
-    def reducer(sequence):
-        counter = {}
-        for key, value in sequence:
-            if key in counter:
-                counter[key] += int(value)
-            else:
-                counter[key] = int(value)
-        return sorted([(key, counter[key]) for key in counter])
-    return reducer(sequence=lista_columna12)
+    data=read_texto()
+    lista_columna1_2=[(data[i][0],int(data[i][1])) for i in range(0,len(data))]
+    map_1_2_unicos=reducer(sequence=lista_columna1_2)
+    return map_1_2_unicos
 
 def pregunta_04():
     """
@@ -112,7 +107,14 @@ def pregunta_04():
     ]
 
     """
-    return
+    data=read_texto()
+    lista_mes=[]
+    for i in range(0,len(data)):
+        lista_fecha=data[i][2].split('-')
+        mes=lista_fecha[1]
+        lista_mes.append((mes,1))
+    map_mes=reducer(sequence=lista_mes)
+    return map_mes
 
 
 def pregunta_05():
@@ -130,7 +132,18 @@ def pregunta_05():
     ]
 
     """
-    return
+    data=read_texto()
+    lista_columna1_2=[(data[i][0],int(data[i][1])) for i in range(0,len(data))]
+    counter = {}
+    for key, value in lista_columna1_2:
+        if key in counter:
+            if counter[key][0] < value:
+                counter[key][0] = value
+            elif counter[key][1] >value:
+                counter[key][1] = value
+        else:
+            counter[key] = [int(value),int(value)]
+    return sorted([(key, counter[key][0],counter[key][1]) for key in counter])
 
 
 def pregunta_06():
@@ -155,7 +168,25 @@ def pregunta_06():
     ]
 
     """
-    return
+    data=read_texto()
+    data_texto=""
+    for i in range(0,len(data)):
+        data_texto+=data[i][4]+','
+    lista_de_clave = list(subString.split(":") for subString in data_texto.split(","))
+    #elimar la ultima posiciond el lista lista_de_claves ya que esta vacia
+    lista_de_clave.pop()
+    lista_de_tulas=[(lista_de_clave[i][0],lista_de_clave[i][1]) for i in range(0,len(lista_de_clave))]
+    counter = {}
+    for key, value in lista_de_tulas:
+        value=int(value)
+        if key in counter:
+            if counter[key][0] > value:
+                counter[key][0] = value
+            elif counter[key][1] < value:
+                counter[key][1] = value
+        else:
+            counter[key] = [int(value),int(value)]
+    return sorted([(key, counter[key][0],counter[key][1]) for key in counter])
 
 
 def pregunta_07():
@@ -179,7 +210,16 @@ def pregunta_07():
     ]
 
     """
-    return
+    data=read_texto()
+    counter={}
+    for line in data:
+        letter=line[0]
+        value=int(line[1])
+        if value in counter:
+            counter[value].append(letter)
+        else:
+            counter[value]=[letter]
+    return sorted([(key, value) for key, value in counter.items()])
 
 
 def pregunta_08():
