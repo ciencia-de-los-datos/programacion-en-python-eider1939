@@ -11,18 +11,29 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
-##funcion lee el archivo data.csv y lo gruada en un lista por lines separadas por '\t'
 def read_texto():
+    #
+    # * Esta funcion lee el archivo data.csv
+    # @Return: matriz  matriz con cada linea de data.csv en un lista
+    #
     lineas_texto=[]
     with open("data.csv", "r") as file:
-        data = file.readlines()
+        data = file.readlines() # se lee cada linea
     for line in data:
-        line = line.replace('\n','')
-        row = line.split(sep='\t')
-        lineas_texto.append(row)
+        line = line.replace('\n','') # se elimina el salto de linea
+        row = line.split(sep='\t') # se crea un lista de la linea que este separado por el espacio \t
+        # se agrega la lista ['E', '1', '1999-02-28', 'b,g,f', 'jjj:12,bbb:3,ddd:9,ggg:8,hhh:2'] a lineas_texto
+        lineas_texto.append(row) 
     return lineas_texto
-##funcion cuenta las ocurrencias 
+
+
+
 def reducer(sequence):
+    #
+    # * Esta funcion reduce los valores asociados a cada clave sumandolos. Como resultado, por 
+    # * ejemplo [('A',3),('B',4),('B',3),('A',10)]; return [('A',13),('B',7)]
+    # @Return: lista de tuplas ordenada
+    #
     counter = {}
     for key, value in sequence:
         if key in counter:
@@ -40,9 +51,10 @@ def pregunta_01():
     214
 
     """
-    data=read_texto()
-    valores_columna2=[int(data[i][1]) for i in range(0,len(data))]
-    return sum(valores_columna2)
+    data=read_texto() # lla ma la funcion read_texto()
+    # recorre la matriz data y agrega el valor convertido a int de la segunda columna de data.csv
+    valores_columna2=[int(data[i][1]) for i in range(0,len(data))] 
+    return sum(valores_columna2) 
 
 def pregunta_02():
     """
@@ -60,7 +72,9 @@ def pregunta_02():
 
     """
     data=read_texto()
+    # recorrela matriz data y agrega un tupla "('A',1)" con el dato de la primera columan de archivo , 1
     lista_columna1=[(data[i][0],1) for i in range(0,len(data))]
+    # se llama a la funcion reducer
     map_1_unicos=reducer(sequence=lista_columna1)
     return map_1_unicos
 
@@ -81,6 +95,8 @@ def pregunta_03():
 
     """
     data=read_texto()
+    # recorrela matriz data y agrega  a un lista "lista_columna1_2"
+    # un tupla con el dato de primera columan de archivo , el dato de la segunda columna
     lista_columna1_2=[(data[i][0],int(data[i][1])) for i in range(0,len(data))]
     map_1_2_unicos=reducer(sequence=lista_columna1_2)
     return map_1_2_unicos
@@ -110,8 +126,11 @@ def pregunta_04():
     data=read_texto()
     lista_mes=[]
     for i in range(0,len(data)):
+        # para el valor de la columa numero 3 del archivo data.csv se crea un lista separando el valor por "-" 
         lista_fecha=data[i][2].split('-')
+        # se sacar el segundo valor de lista_fecha, el cual es el mes
         mes=lista_fecha[1]
+        #se agrega una tupla a lista_mes
         lista_mes.append((mes,1))
     map_mes=reducer(sequence=lista_mes)
     return map_mes
@@ -136,7 +155,7 @@ def pregunta_05():
     lista_columna1_2=[(data[i][0],int(data[i][1])) for i in range(0,len(data))]
     counter = {}
     for key, value in lista_columna1_2:
-        if key in counter:
+        if key in counter:         
             if counter[key][0] < value:
                 counter[key][0] = value
             elif counter[key][1] >value:
@@ -173,7 +192,7 @@ def pregunta_06():
     for i in range(0,len(data)):
         data_texto+=data[i][4]+','
     lista_de_clave = list(subString.split(":") for subString in data_texto.split(","))
-    #elimar la ultima posiciond el lista lista_de_claves ya que esta vacia
+    #elimar la ultima posicion de el lista lista_de_claves ya que esta vacia
     lista_de_clave.pop()
     lista_de_tulas=[(lista_de_clave[i][0],lista_de_clave[i][1]) for i in range(0,len(lista_de_clave))]
     counter = {}
@@ -244,7 +263,17 @@ def pregunta_08():
     ]
 
     """
-    return
+    data=read_texto()
+    counter={}
+    for line in data:
+        letter=line[0]
+        value=int(line[1])
+        if value in counter:
+            if letter not in counter[value]:
+                counter[value].append(letter)
+        else:
+            counter[value]=[letter]
+    return sorted([(key, sorted(value)) for key, value in counter.items()])
 
 
 def pregunta_09():
@@ -267,7 +296,16 @@ def pregunta_09():
     }
 
     """
-    return
+    data=read_texto()
+    data_texto=""
+    for i in range(0,len(data)):
+        data_texto+=data[i][4]+','
+    lista_de_clave = list(subString.split(":") for subString in data_texto.split(","))
+    #elimar la ultima posiciond el lista lista_de_claves ya que esta vacia
+    lista_de_clave.pop()
+    lista_de_tulas=[(lista_de_clave[i][0],1) for i in range(0,len(lista_de_clave))]
+    cantidad=reducer(sequence=lista_de_tulas)
+    return {cantidad[i][0]:cantidad[i][1] for i in range(len(cantidad))}
 
 
 def pregunta_10():
@@ -288,7 +326,14 @@ def pregunta_10():
 
 
     """
-    return
+    data=read_texto()
+    counter=[]
+    for i in range(0,len(data)):
+        letter=data[i][0]
+        cont_columna_4=len(data[i][3].split(","))
+        cont_columna_5=len(data[i][4].split(","))
+        counter.append((letter,cont_columna_4,cont_columna_5))
+    return counter
 
 
 def pregunta_11():
@@ -309,8 +354,15 @@ def pregunta_11():
 
 
     """
-    return
-
+    data=read_texto()
+    counter=[]
+    for i in range(0,len(data)):
+        valor_columna_2=int(data[i][1])
+        columna_4=data[i][3].split(",")
+        for j in columna_4:
+            counter.append((j,valor_columna_2))
+    cantidad=reducer(sequence=counter)
+    return {cantidad[i][0]:cantidad[i][1] for i in range(len(cantidad))}
 
 def pregunta_12():
     """
@@ -327,4 +379,18 @@ def pregunta_12():
     }
 
     """
-    return
+    data=read_texto()
+    counter=[]
+    for i in range(0,len(data)):
+        letter=data[i][0] #valor de la perimera columna
+        #convertirmos la columan  5 de data.csv de jjj:12,bbb:3,ddd:9,ggg:8,hhh:2
+        #a [['jjj', '12'], ['bbb', '3'], ['ddd', '9'], ['ggg', '8'], ['hhh', '2']]
+        columna_4=list(subString.split(":") for subString in data[i][4].split(","))
+        #recorremos las matriz columna_4 para sumar los valores de cada de la segunda columna
+        suma_columna_4=sum([int(columna_4[j][1]) for j in range(len(columna_4))])
+        #se agrega a counter un tupla con el la letra y la suma de la columna 4
+        counter.append((letter,suma_columna_4))
+    #se llama a reducer para que cuente las cpincidencias
+    cantidad=reducer(sequence=counter)
+    #reducer de vuelve una lista de tupla asi que convertimos esa lista en un dicc y retornamos 
+    return {cantidad[i][0]:cantidad[i][1] for i in range(len(cantidad))}
